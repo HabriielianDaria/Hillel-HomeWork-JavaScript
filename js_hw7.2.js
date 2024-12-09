@@ -1,19 +1,12 @@
 function isValidString(str) {
-    const words = str.split(/\s*,\s*/); 
-    const regex = /^[^aA\s,]{6,}$/;  
-    words.forEach(word => {
-        console.log(`${word}: ${regex.test(word)}`);
-    });
-    //return true; 
+    const regex = /\b[^aA\s,]{6,}\b/g;  
+    const matches = str.match(regex);    
+    return matches || [];              
 }
-var str = "Wonderful, Joyful, Happiness, Time, Task, Apple";
-var str2 = "Dorio"
-isValidString(str);
-isValidString(str2); 
 
-/*console.log(isValidString("Daria4")); 
-console.log(isValidString("Dorio")); 
-console.log(isValidString("Dorio5"));*/
+var str = "Wonderful, Joyful, Happiness, Time, Task, Apple";
+
+console.log(isValidString(str));  
 
 
 
