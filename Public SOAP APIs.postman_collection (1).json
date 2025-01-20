@@ -1,0 +1,1014 @@
+{
+	"info": {
+		"_postman_id": "9dcdc9db-66ee-4318-bfe8-d93d04497f5a",
+		"name": "Public SOAP APIs",
+		"description": "This is a collection of different SOAP APIs that are completley public and do not require any authentication, making it easier for consumers to play with and understand what APIs are all about by seeing the many different ways in which APIs can be used.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27561271"
+	},
+	"item": [
+		{
+			"name": "Book ISBN Numbers",
+			"item": [
+				{
+					"name": "Is Valid ISBN13 Number",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"ISBN tag is present\", function () {\r",
+									"    var requestBody = pm.request.body.raw;\r",
+									"    pm.expect(requestBody).to.include(\"<sISBN>978-1-4612-9090-2</sISBN>\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml; charset=utf-8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <IsValidISBN13 xmlns=\"http://webservices.daehosting.com/ISBN\">\n      <sISBN>978-1-4612-9090-2</sISBN>\n    </IsValidISBN13>\n  </soap:Body>\n</soap:Envelope>"
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						},
+						"description": "The test is done by calculation on the first 12 digits and compare the result with the checksum number at the end. You have to pass a 13 digits number."
+					},
+					"response": []
+				},
+				{
+					"name": "ISBN13 Not Valid Number",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Invalid ISBN-13 returns false\", function () {\r",
+									"    var responseXml = pm.response.text();\r",
+									"    var jsonData = xml2Json(responseXml);\r",
+									"    pm.expect(jsonData['soap:Envelope']['soap:Body']['m:IsValidISBN13Response']['m:IsValidISBN13Result']).to.eql('false');\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml; charset=utf-8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <IsValidISBN13 xmlns=\"http://webservices.daehosting.com/ISBN\">\n      <sISBN>978-1-4612-9090-7</sISBN>\n    </IsValidISBN13>\n  </soap:Body>\n</soap:Envelope>"
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						},
+						"description": "The test is done by calculation on the first 12 digits and compare the result with the checksum number at the end. You have to pass a 13 digits number."
+					},
+					"response": []
+				},
+				{
+					"name": "ISBN13 Empty Number",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"IsValidISBN13Result is false when ISBN is missing or invalid\", function () {\r",
+									"    var responseXml = pm.response.text();\r",
+									"    var isValid = /<m:IsValidISBN13Result>false<\\/m:IsValidISBN13Result>/.test(responseXml);\r",
+									"    pm.expect(isValid).to.be.true;\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml; charset=utf-8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <IsValidISBN13 xmlns=\"http://webservices.daehosting.com/ISBN\">\n      <sISBN></sISBN>\n    </IsValidISBN13>\n  </soap:Body>\n</soap:Envelope>"
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						},
+						"description": "The test is done by calculation on the first 12 digits and compare the result with the checksum number at the end. You have to pass a 13 digits number."
+					},
+					"response": []
+				},
+				{
+					"name": "ISBN13 Valid Content Type",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Correct Content-Type returns 200 OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"\r",
+									"    var contentType = pm.response.headers.get(\"Content-Type\");\r",
+									"    pm.expect(contentType).to.include(\"text/xml\"); \r",
+									"    pm.expect(contentType).to.include(\"charset=utf-8\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml; charset=utf-8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <IsValidISBN13 xmlns=\"http://webservices.daehosting.com/ISBN\">\n      <sISBN>978-1-4612-9090-2</sISBN>\n    </IsValidISBN13>\n  </soap:Body>\n</soap:Envelope>"
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						},
+						"description": "The test is done by calculation on the first 12 digits and compare the result with the checksum number at the end. You have to pass a 13 digits number."
+					},
+					"response": []
+				},
+				{
+					"name": "ISBN13 Not Valid Content Type",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check Content-Type is text/xml; charset=utf-8\", function () {\r",
+									"    var contentType = pm.response.headers.get(\"Content-Type\");\r",
+									"\r",
+									"    if (!contentType.includes(\"text/xml\") || !contentType.includes(\"charset=utf-8\")) {\r",
+									"        console.error(\"Контент тайп має бути text/xml; charset=utf-8. Поточний Content-Type: \" + contentType);\r",
+									"    } else {\r",
+									"        pm.expect(contentType).to.include(\"text/xml\");\r",
+									"        pm.expect(contentType).to.include(\"charset=utf-8\");\r",
+									"    }\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/soap+xml",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <IsValidISBN13 xmlns=\"http://webservices.daehosting.com/ISBN\">\n      <sISBN>978-1-4612-9090-2</sISBN>\n    </IsValidISBN13>\n  </soap:Body>\n</soap:Envelope>"
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						},
+						"description": "The test is done by calculation on the first 12 digits and compare the result with the checksum number at the end. You have to pass a 13 digits number."
+					},
+					"response": []
+				},
+				{
+					"name": "ISBN13 Valid Number but with double hyphen",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Remove double hyphen from ISBN\", function () {\r",
+									"    var isbn = \"978-1--4612-9090-2\";\r",
+									"    var cleanedIsbn = isbn.replace(/--/g, '-');\r",
+									"\r",
+									"    pm.expect(cleanedIsbn).to.eql(\"978-1-4612-9090-2\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml; charset=utf-8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <IsValidISBN13 xmlns=\"http://webservices.daehosting.com/ISBN\">\n      <sISBN>978--1--4612--9090--2</sISBN>\n    </IsValidISBN13>\n  </soap:Body>\n</soap:Envelope>\n\n"
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						},
+						"description": "The test is done by calculation on the first 12 digits and compare the result with the checksum number at the end. You have to pass a 13 digits number."
+					},
+					"response": []
+				},
+				{
+					"name": "ISBN13 Header Date",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Date header format is correct\", function () {\r",
+									"    var dateHeader = pm.response.headers.get(\"Date\");\r",
+									"    pm.expect(dateHeader).to.match(/^[A-Za-z]{3}, \\d{2} [A-Za-z]{3} \\d{4} \\d{2}:\\d{2}:\\d{2} GMT$/);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml; charset=utf-8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <IsValidISBN13 xmlns=\"http://webservices.daehosting.com/ISBN\">\n      <sISBN>978-1-4612-9090-2</sISBN>\n    </IsValidISBN13>\n  </soap:Body>\n</soap:Envelope>\n"
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						},
+						"description": "The test is done by calculation on the first 12 digits and compare the result with the checksum number at the end. You have to pass a 13 digits number."
+					},
+					"response": []
+				},
+				{
+					"name": "ISBN13 Header Content-Length",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Length header format is correct\", function () {\r",
+									"    var contentLength = pm.response.headers.get(\"Content-Length\");\r",
+									"    pm.expect(parseInt(contentLength)).to.be.a(\"number\");\r",
+									"    pm.expect(parseInt(contentLength)).to.be.greaterThan(0);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml; charset=utf-8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <IsValidISBN13 xmlns=\"http://webservices.daehosting.com/ISBN\">\n      <sISBN>978-1-4612-9090-2</sISBN>\n    </IsValidISBN13>\n  </soap:Body>\n</soap:Envelope>\n"
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						},
+						"description": "The test is done by calculation on the first 12 digits and compare the result with the checksum number at the end. You have to pass a 13 digits number."
+					},
+					"response": []
+				},
+				{
+					"name": "ISBN13 Header Cache-Control",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Cache-Control header format is correct\", function () {\r",
+									"    var cacheControl = pm.response.headers.get(\"Cache-Control\");\r",
+									"    pm.expect(cacheControl).to.match(/^(private, max-age=0)$/);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml; charset=utf-8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <IsValidISBN13 xmlns=\"http://webservices.daehosting.com/ISBN\">\n      <sISBN>978-1-4612-9090-2</sISBN>\n    </IsValidISBN13>\n  </soap:Body>\n</soap:Envelope>\n"
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						},
+						"description": "The test is done by calculation on the first 12 digits and compare the result with the checksum number at the end. You have to pass a 13 digits number."
+					},
+					"response": []
+				},
+				{
+					"name": "ISBN13 Header Content-Encoding",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Encoding format is correct\", function () {\r",
+									"    var contentEncoding = pm.response.headers.get(\"Content-Encoding\");\r",
+									"    pm.expect(contentEncoding).to.eql(\"gzip\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml; charset=utf-8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <IsValidISBN13 xmlns=\"http://webservices.daehosting.com/ISBN\">\n      <sISBN>978-1-4612-9090-2</sISBN>\n    </IsValidISBN13>\n  </soap:Body>\n</soap:Envelope>\n"
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						},
+						"description": "The test is done by calculation on the first 12 digits and compare the result with the checksum number at the end. You have to pass a 13 digits number."
+					},
+					"response": []
+				},
+				{
+					"name": "Is Valid ISBN10 Number",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"ISBN tag is present\", function () {\r",
+									"    var requestBody = pm.request.body.raw;\r",
+									"    pm.expect(requestBody).to.include(\"<sISBN>0-19-852663-6</sISBN>\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml; charset=utf-8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <IsValidISBN10 xmlns=\"http://webservices.daehosting.com/ISBN\">\n      <sISBN>0-19-852663-6</sISBN>\n    </IsValidISBN10>\n  </soap:Body>\n</soap:Envelope>"
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						},
+						"description": "The test is done by calculation on the first 9 digits and compare the result with the checksum number at the end. You have to pass a 10 digits number or 8 digits and an X."
+					},
+					"response": []
+				},
+				{
+					"name": "ISBN10 Not Valid Number lenght",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Invalid ISBN-10 length\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    var responseBody = pm.response.text();\r",
+									"    pm.expect(responseBody).to.include('<m:IsValidISBN10Result>false</m:IsValidISBN10Result>');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml; charset=utf-8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <IsValidISBN10 xmlns=\"http://webservices.daehosting.com/ISBN\">\n      <sISBN>0-19-852663-6000000000000000000000000000000000000</sISBN>\n    </IsValidISBN10>\n  </soap:Body>\n</soap:Envelope>"
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						},
+						"description": "The test is done by calculation on the first 9 digits and compare the result with the checksum number at the end. You have to pass a 10 digits number or 8 digits and an X."
+					},
+					"response": []
+				},
+				{
+					"name": "ISBN10 Not Valid Number 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Invalid ISBN-10 format\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    var responseBody = pm.response.text();\r",
+									"    pm.expect(responseBody).to.include('<m:IsValidISBN10Result>false</m:IsValidISBN10Result>');\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <IsValidISBN10 xmlns=\"http://webservices.daehosting.com/ISBN\">\n      <sISBN>\"0-19-852663-6\"</sISBN>\n    </IsValidISBN10>\n  </soap:Body>\n</soap:Envelope>"
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						},
+						"description": "The test is done by calculation on the first 9 digits and compare the result with the checksum number at the end. You have to pass a 10 digits number or 8 digits and an X."
+					},
+					"response": []
+				},
+				{
+					"name": "ISBN10 Content type is correct",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type header includes charset=utf-8\", function () {\r",
+									"    var contentType = pm.response.headers.get(\"Content-Type\");\r",
+									"    pm.expect(contentType).to.include(\"text/xml\");\r",
+									"    pm.expect(contentType).to.include(\"charset=utf-8\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <IsValidISBN10 xmlns=\"http://webservices.daehosting.com/ISBN\">\n      <sISBN>0-19-852663-6</sISBN>\n    </IsValidISBN10>\n  </soap:Body>\n</soap:Envelope>\n"
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						},
+						"description": "The test is done by calculation on the first 9 digits and compare the result with the checksum number at the end. You have to pass a 10 digits number or 8 digits and an X."
+					},
+					"response": []
+				},
+				{
+					"name": "ISBN10 Strict-Transport-Security is correct value",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Strict-Transport-Security header is correct\", function () {\r",
+									"    var hsts = pm.response.headers.get(\"Strict-Transport-Security\");\r",
+									"    pm.expect(hsts).to.include(\"max-age=15768000\");\r",
+									"    pm.expect(hsts).to.include(\"includeSubdomains\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <IsValidISBN10 xmlns=\"http://webservices.daehosting.com/ISBN\">\n      <sISBN>0-19-852663-6</sISBN>\n    </IsValidISBN10>\n  </soap:Body>\n</soap:Envelope>\n"
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						},
+						"description": "The test is done by calculation on the first 9 digits and compare the result with the checksum number at the end. You have to pass a 10 digits number or 8 digits and an X."
+					},
+					"response": []
+				},
+				{
+					"name": "ISBN10 All necessary headers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains all necessary headers\", function () {\r",
+									"    pm.response.to.have.header(\"Cache-Control\");\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.response.to.have.header(\"Server\");\r",
+									"    pm.response.to.have.header(\"Date\");\r",
+									"    pm.response.to.have.header(\"Content-Length\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <IsValidISBN10 xmlns=\"http://webservices.daehosting.com/ISBN\">\n      <sISBN>0-19-852663-6</sISBN>\n    </IsValidISBN10>\n  </soap:Body>\n</soap:Envelope>\n"
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						},
+						"description": "The test is done by calculation on the first 9 digits and compare the result with the checksum number at the end. You have to pass a 10 digits number or 8 digits and an X."
+					},
+					"response": []
+				},
+				{
+					"name": "ISBN10 Content lenght is a number",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Length header should be a number\", function () {\r",
+									"    var contentLength = pm.response.headers.get(\"Content-Length\");\r",
+									"    pm.expect(Number(contentLength)).to.be.a(\"number\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <IsValidISBN10 xmlns=\"http://webservices.daehosting.com/ISBN\">\n      <sISBN>0-19-852663-6</sISBN>\n    </IsValidISBN10>\n  </soap:Body>\n</soap:Envelope>\n"
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						},
+						"description": "The test is done by calculation on the first 9 digits and compare the result with the checksum number at the end. You have to pass a 10 digits number or 8 digits and an X."
+					},
+					"response": []
+				},
+				{
+					"name": "ISBN10 Vary header is correct",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Vary header has correct values\", function () {\r",
+									"    var varyHeader = pm.response.headers.get(\"Vary\");\r",
+									"    var varyValues = varyHeader.split(\", \");\r",
+									"    pm.expect(varyValues).to.include(\"Accept-Encoding\"); \r",
+									"    pm.expect(varyValues.length).to.be.above(0);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <IsValidISBN10 xmlns=\"http://webservices.daehosting.com/ISBN\">\n      <sISBN>0-19-852663-6</sISBN>\n    </IsValidISBN10>\n  </soap:Body>\n</soap:Envelope>\n"
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						},
+						"description": "The test is done by calculation on the first 9 digits and compare the result with the checksum number at the end. You have to pass a 10 digits number or 8 digits and an X."
+					},
+					"response": []
+				},
+				{
+					"name": "ISBN10 Web-Service header is correct",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Web-Service header is present\", function () {\r",
+									"    pm.response.to.have.header(\"Web-Service\"); \r",
+									"});\r",
+									"\r",
+									"pm.test(\"Web-Service header has correct value\", function () {\r",
+									"    pm.response.to.have.header(\"Web-Service\", \"DataFlex 18.2\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <IsValidISBN10 xmlns=\"http://webservices.daehosting.com/ISBN\">\n      <sISBN>0-19-852663-6</sISBN>\n    </IsValidISBN10>\n  </soap:Body>\n</soap:Envelope>\n"
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						},
+						"description": "The test is done by calculation on the first 9 digits and compare the result with the checksum number at the end. You have to pass a 10 digits number or 8 digits and an X."
+					},
+					"response": []
+				},
+				{
+					"name": "ISBN10 Permissions-Police header is correct",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Permissions-Policy header is correct\", function () {\r",
+									"    pm.response.to.have.header(\"Permissions-Policy\", \"interest-cohort=()\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <IsValidISBN10 xmlns=\"http://webservices.daehosting.com/ISBN\">\n      <sISBN>0-19-852663-6</sISBN>\n    </IsValidISBN10>\n  </soap:Body>\n</soap:Envelope>\n"
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						},
+						"description": "The test is done by calculation on the first 9 digits and compare the result with the checksum number at the end. You have to pass a 10 digits number or 8 digits and an X."
+					},
+					"response": []
+				}
+			],
+			"description": "SOAP APIs for book ISBN numbers.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://webservices.daehosting.com/services/isbnservice.wso",
+			"type": "string"
+		}
+	]
+}
